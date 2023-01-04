@@ -2,7 +2,7 @@ const router = require('express').Router()
 
 const Person = require('../models/Person')
 
-
+// create - CRIAÇÃO DE DADOS
 router.post('/', async (req, res) => {
     const {name, salary, approved} = req.body
     
@@ -26,6 +26,29 @@ router.post('/', async (req, res) => {
     try {
         await Person.create(person)
         res.status(201).json({ message: "pessoa inserida no sistema com sucesso" })
+    }
+    catch (error) {
+        res.status(500).json({ error: error })
+    }
+})
+
+// Read - Leitura de Dados
+router.get('/', async (_req, res) => {
+    try {
+        const people = await Person.find()
+        res.status(200).json(people)
+    }
+    catch (error) {
+        res.status(500).json({ error: error })
+    }
+})
+
+router.get('/:id', async (req, res) => {
+    //extrair o dado da requisição --- pela URL = req.params
+    const id = req.params.id
+    try {
+        const person = await Person.findOne({_id: id})
+        res.status(200).json(person)
     }
     catch (error) {
         res.status(500).json({ error: error })
